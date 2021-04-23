@@ -7,6 +7,7 @@ from database import database
 router = APIRouter(
     prefix="/Activity",
     tags=["Activity"],
+    responses={404: {"description": "Not found"}},
 )
 
 
