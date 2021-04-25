@@ -1,8 +1,10 @@
 from typing import Optional, List
 
-from fastapi import APIRouter, Query, status, BackgroundTasks, Response
+from fastapi import APIRouter, Query, status, BackgroundTasks, Response, Depends
 from pydantic import BaseModel, Field
+from sqlalchemy.orm.session import Session
 from database import database
+from database.db import get_db
 
 router = APIRouter(
     prefix="/Activity",
@@ -12,30 +14,33 @@ router = APIRouter(
 
 
 class ActivityAttr(BaseModel):
-    MalePlayers: int = Field(...,
-                             description="Number of male players", example=5)
-    FemalePlayers: int = Field(...,
-                               description="Number of female players", example=2)
+    male_players: int = Field(...,
+                              description="Number of male players", example=5)
+    female_players: int = Field(...,
+                                description="Number of female players", example=2)
 
 
 class Activity(ActivityAttr):
-    Name: str = Field(..., description="Name of the activity",
+    name: str = Field(..., description="Name of the activity",
                       example="swimming")
+
+    class Config:
+        orm_mode = True
 
 
 @router.get("/", response_model=List[Activity])
 async def get_activity(
     response: Response,
+    db: Session = Depends(get_db),
     activity: Optional[str] = Query(
         None,
         title="Activity",
         description="The name of the activity to query.",
     ),
 ):
-    res = database.get_activity(activity=activity)
+    res = database.get_activity(db, activity=activity)
     if not res:
         response.status_code = status.HTTP_404_NOT_FOUND
-
     return res
 
 
@@ -43,7 +48,8 @@ async def get_activity(
 async def put_activity(
     name: str,
     attr: ActivityAttr,
-    background_tasks: BackgroundTasks
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
 ):
-    background_tasks.add_task(database.update_activity_probability)
-    return database.put_activity(name, attr.dict())
+    background_tasks.add_task(database.update_activity_probability, db)
+    return database.put_activity(db, name, attr.dict())
