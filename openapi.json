@@ -1,0 +1,638 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/ActivityProbability/": {
+            "get": {
+                "tags": [
+                    "ActivityProbability"
+                ],
+                "summary": "Get Activity Probability",
+                "operationId": "get_activity_probability_ActivityProbability__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ActivityProbability"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/Activity/": {
+            "get": {
+                "tags": [
+                    "Activity"
+                ],
+                "summary": "Get one or all activities",
+                "operationId": "get_activity_Activity__get",
+                "parameters": [
+                    {
+                        "description": "The name of the activity to query.",
+                        "required": false,
+                        "schema": {
+                            "title": "Activity",
+                            "type": "string",
+                            "description": "The name of the activity to query."
+                        },
+                        "name": "activity",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Activity Activity  Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Activity"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/Activity/{name}": {
+            "put": {
+                "tags": [
+                    "Activity"
+                ],
+                "summary": "Put Activity",
+                "operationId": "put_activity_Activity__name__put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Name",
+                            "type": "string"
+                        },
+                        "name": "name",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ActivityAttr"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Activity"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/Recommender/{gender}": {
+            "get": {
+                "tags": [
+                    "Recommender"
+                ],
+                "summary": "Get Recommend Activity",
+                "operationId": "get_recommend_activity_Recommender__gender__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Gender",
+                            "pattern": "^male$|^female$",
+                            "type": "string"
+                        },
+                        "name": "gender",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecomActivity"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/token/": {
+            "post": {
+                "tags": [
+                    "token"
+                ],
+                "summary": "Login For Access Token",
+                "description": "Log in as root user to get root token (valid for 60 minutes)",
+                "operationId": "login_for_access_token_token__post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_login_for_access_token_token__post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/token/generate": {
+            "put": {
+                "tags": [
+                    "token"
+                ],
+                "summary": "Generate Token",
+                "description": "Generate user token. Require root JWT authorization token.",
+                "operationId": "generate_token_token_generate_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserGen"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/token/root-test": {
+            "get": {
+                "tags": [
+                    "token"
+                ],
+                "summary": "Test Root Api",
+                "description": "Test root user access. Require root JWT authorization token.",
+                "operationId": "test_root_api_token_root_test_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/token/reg-test": {
+            "get": {
+                "tags": [
+                    "token"
+                ],
+                "summary": "Test Regular User Api",
+                "description": "Test regular user access. Require user JWT authorization token.",
+                "operationId": "test_regular_user_api_token_reg_test_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/": {
+            "get": {
+                "summary": "Welcome",
+                "operationId": "welcome__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reset": {
+            "get": {
+                "summary": "Reset",
+                "description": "Reset database. Require root JWT token.",
+                "operationId": "reset_reset_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Activity": {
+                "title": "Activity",
+                "required": [
+                    "male_players",
+                    "female_players",
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "male_players": {
+                        "title": "Male Players",
+                        "type": "integer",
+                        "description": "Number of male players",
+                        "example": 5
+                    },
+                    "female_players": {
+                        "title": "Female Players",
+                        "type": "integer",
+                        "description": "Number of female players",
+                        "example": 2
+                    },
+                    "name": {
+                        "title": "Name",
+                        "type": "string",
+                        "description": "Name of the activity",
+                        "example": "swimming"
+                    }
+                }
+            },
+            "ActivityAttr": {
+                "title": "ActivityAttr",
+                "required": [
+                    "male_players",
+                    "female_players"
+                ],
+                "type": "object",
+                "properties": {
+                    "male_players": {
+                        "title": "Male Players",
+                        "type": "integer",
+                        "description": "Number of male players",
+                        "example": 5
+                    },
+                    "female_players": {
+                        "title": "Female Players",
+                        "type": "integer",
+                        "description": "Number of female players",
+                        "example": 2
+                    }
+                }
+            },
+            "ActivityProbability": {
+                "title": "ActivityProbability",
+                "required": [
+                    "male",
+                    "female"
+                ],
+                "type": "object",
+                "properties": {
+                    "male": {
+                        "title": "Male",
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "number"
+                        },
+                        "example": {
+                            "basketball": 0.8,
+                            "swimming": 0.2
+                        }
+                    },
+                    "female": {
+                        "title": "Female",
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "number"
+                        },
+                        "example": {
+                            "walking": 0.5,
+                            "shopping": 0.5
+                        }
+                    }
+                }
+            },
+            "Body_login_for_access_token_token__post": {
+                "title": "Body_login_for_access_token_token__post",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "grant_type": {
+                        "title": "Grant Type",
+                        "pattern": "password",
+                        "type": "string"
+                    },
+                    "username": {
+                        "title": "Username",
+                        "type": "string"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "type": "string"
+                    },
+                    "scope": {
+                        "title": "Scope",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "title": "Client Id",
+                        "type": "string"
+                    },
+                    "client_secret": {
+                        "title": "Client Secret",
+                        "type": "string"
+                    }
+                }
+            },
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "RecomActivity": {
+                "title": "RecomActivity",
+                "type": "object",
+                "properties": {
+                    "Activity": {
+                        "title": "Activity",
+                        "type": "string",
+                        "description": "Recommended activity",
+                        "example": "swimming"
+                    }
+                }
+            },
+            "Token": {
+                "title": "Token",
+                "required": [
+                    "access_token",
+                    "token_type"
+                ],
+                "type": "object",
+                "properties": {
+                    "access_token": {
+                        "title": "Access Token",
+                        "type": "string"
+                    },
+                    "token_type": {
+                        "title": "Token Type",
+                        "type": "string"
+                    }
+                }
+            },
+            "User": {
+                "title": "User",
+                "required": [
+                    "username"
+                ],
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "title": "Username",
+                        "type": "string",
+                        "description": "Username",
+                        "example": "Peter"
+                    }
+                }
+            },
+            "UserGen": {
+                "title": "UserGen",
+                "required": [
+                    "username",
+                    "expire_days"
+                ],
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "title": "Username",
+                        "type": "string",
+                        "description": "Username",
+                        "example": "Peter"
+                    },
+                    "expire_days": {
+                        "title": "Expire Days",
+                        "type": "number",
+                        "description": "Number of days till token expire",
+                        "example": 360.0
+                    }
+                }
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "token"
+                    }
+                }
+            }
+        }
+    }
+}
