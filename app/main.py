@@ -1,13 +1,14 @@
 import logging
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, Response, status
 
 from database.db import Base, engine, DbManager
 from database import database
 from routers import (
     activity_probability,
     activity,
-    recommender
+    recommender,
+    token,
 )
 
 
@@ -21,22 +22,30 @@ app = FastAPI()
 app.include_router(activity_probability.router)
 app.include_router(activity.router)
 app.include_router(recommender.router)
+app.include_router(token.router)
 
 
 @app.get("/")
-async def root():
+async def welcome():
     return {"message": "Main application!"}
 
 
-@app.get("/reset")
-async def reset():
+@app.get(
+    "/reset",
+    description="Reset database. Require root JWT token."
+)
+async def reset(
+    response: Response,
+    _: token.User = Depends(token.get_root_user)
+):
     try:
         # Initialize DB
         with DbManager() as db:
             database.initialize_activity(db)
     except Exception as e:
         logger.error(f"Reset DB failed. Error: {e}")
-        msg = "Reset DB failed"
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        msg = "Reset DB fail"
     else:
         msg = "Reset DB success"
     return {"message": msg}

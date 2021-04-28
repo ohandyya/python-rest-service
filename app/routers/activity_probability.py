@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from database import database
 from sqlalchemy.orm.session import Session
 from database.db import get_db
+from routers import token
 
 
 router = APIRouter(
@@ -33,7 +34,11 @@ class ActivityProbability(BaseModel):
 
 
 @router.get("/", response_model=ActivityProbability)
-async def get_activity_probability(response: Response, db: Session = Depends(get_db)):
+async def get_activity_probability(
+    response: Response,
+    db: Session = Depends(get_db),
+    _: token.User = Depends(token.get_regular_user),
+):
     raw_res = database.get_activity_probability(db)
     if not raw_res:
         response.status_code = status.HTTP_404_NOT_FOUND

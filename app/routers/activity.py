@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm.session import Session
 from database import database
 from database.db import get_db
+from routers import token
 
 router = APIRouter(
     prefix="/Activity",
@@ -28,7 +29,11 @@ class Activity(ActivityAttr):
         orm_mode = True
 
 
-@router.get("/", response_model=List[Activity])
+@router.get(
+    "/",
+    response_model=List[Activity],
+    summary="Get one or all activities"
+)
 async def get_activity(
     response: Response,
     db: Session = Depends(get_db),
@@ -37,6 +42,7 @@ async def get_activity(
         title="Activity",
         description="The name of the activity to query.",
     ),
+    _: token.User = Depends(token.get_regular_user),
 ):
     res = database.get_activity(db, activity=activity)
     if not res:
@@ -49,7 +55,8 @@ async def put_activity(
     name: str,
     attr: ActivityAttr,
     background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: token.User = Depends(token.get_regular_user),
 ):
     background_tasks.add_task(database.update_activity_probability, db)
     return database.put_activity(db, name, attr.dict())

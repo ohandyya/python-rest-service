@@ -2,12 +2,14 @@ import logging
 import json
 from typing import Optional
 
-import numpy as np
 from fastapi import APIRouter, Path, status, Response, Depends
 from sqlalchemy.orm.session import Session
 from pydantic import BaseModel, Field
 from database import database
 from database.db import get_db
+from routers import token
+from model.predictor import choose_activity
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -43,12 +45,10 @@ def _recommend_activity(db: Session, gender: str) -> Optional[str]:
         logger.info(f"Cannot find {gender} from DB")
         return None
 
-    # This block simulate a simple ML algorithm
-    # In real life, we will put the ML algrotihm in a different file/package
-    rng = np.random.default_rng()
-    act = rng.choice(
+    # Run ML prediction
+    act = choose_activity(
         list(prob.keys()),
-        p=list(prob.values())
+        list(prob.values())
     )
     return act
 
@@ -58,6 +58,7 @@ async def get_recommend_activity(
     response: Response,
     gender: str = Path(..., title="Gender", regex="^male$|^female$"),
     db: Session = Depends(get_db),
+    _: token.User = Depends(token.get_regular_user),
 ):
     act = _recommend_activity(db, gender)
 
