@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+python-jose
+passlib
+bcrypt
+
+numpy==1.20.2
+SQLAlchemy==1.4.11
+
+# Packages for test
+requests==2.25.1
+pytest==6.2.3
+pytest-cov==2.11.1
+mock==4.0.3
