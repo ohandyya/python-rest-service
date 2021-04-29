@@ -35,6 +35,9 @@
         # Furthermore, you can test the API endpoints directly.
         # However, it is not very stable and should not be used for serious testing. 
         # I would recommend using proper http client (e.g., Postman) for testing API.
+
+        # Shutdown the service
+        make stop
         ```
 
 ## Useful Resrouces
