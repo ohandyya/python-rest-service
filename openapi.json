@@ -592,7 +592,7 @@
                         "title": "Expire Days",
                         "type": "number",
                         "description": "Number of days till token expire",
-                        "example": 360.0
+                        "example": 360
                     }
                 }
             },

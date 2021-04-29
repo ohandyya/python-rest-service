@@ -31,10 +31,12 @@
         # Run the service using docker
         make run
 
-        # Then, you can go to http://localhost/docs to see the API documentations
-        # Furthermore, you can test the API endpoints directly.
-        # However, it is not very stable and should not be used for serious testing. 
-        # I would recommend using proper http client (e.g., Postman) for testing API.
+        # Then, you can go to 
+        #             http://localhost/docs 
+        # to see the API documentations.
+        # Furthermore, you can test the API endpoints directly on it.
+        # However, it is for lightweight exploration and should not be used for API testing. 
+        # I would recommend using proper http client (e.g., Postman) for API testing.
 
         # Shutdown the service
         make stop
