@@ -4,6 +4,7 @@ help:
 IMG = pyrest
 CONTAINER = pyrest-cnt
 DB_URL_DEV ?= sqlite:////app/sql_app.db
+OPENAPI_JSON = openapi.json
 
 clear:  ## Delete all unused cache an files
 	-find . -name __pycache__ | xargs rm -rf
@@ -37,3 +38,6 @@ bash:  ## Access container with bash
 
 test:  ## Run test
 	docker run --rm ${IMG} py.test -vv --cov=/app --cov-report term-missing /tests
+
+get_api_doc:  ## Get openapi.json (assume service is already running locally)
+	curl http://localhost/openapi.json | jq . > ${OPENAPI_JSON}
