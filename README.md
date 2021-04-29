@@ -12,11 +12,30 @@
 
 - User can update the activity database, that is, the number of male players and female players for each activity.
 
-## API Definition
+## API Documentation
 
 - [openapi.json](openapi.json)
 
-    - If you prefer to read the definiton from GUI, you can see at [here]
+  - If you prefer GUI, you have two options.
+  
+    - First, you can copy-paste [openapi.json](openapi.json) to any  online swagger visulation tool (for example, [swagger editor](https://editor.swagger.io/)).
+
+    - Second, you can build the serice locally, and look at the API documentation locally.
+
+        ```bash
+        # Assuming you have already clone the project locally
+
+        # Build the service docker image
+        make build
+
+        # Run the service using docker
+        make run
+
+        # Then, you can go to http://localhost/docs to see the API documentations
+        # Furthermore, you can test the API endpoints directly.
+        # However, it is not very stable and should not be used for serious testing. 
+        # I would recommend using proper http client (e.g., Postman) for testing API.
+        ```
 
 ## Useful Resrouces
 
