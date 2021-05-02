@@ -3,7 +3,7 @@ help:
 
 IMG = pyrest
 CONTAINER = pyrest-cnt
-DB_URL_DEV ?= sqlite:////app/sql_app.db
+DB_URL ?= sqlite:////app/sql_app.db
 OPENAPI_JSON = openapi.json
 
 clear:  ## Delete all unused cache an files
@@ -18,13 +18,14 @@ build_image:  ## Build image
 	docker build -t ${IMG} .
 
 run:  ## Run image
-	docker run --rm -d --name ${CONTAINER} -p 80:80 ${IMG}
+	docker run --rm -d --name ${CONTAINER} -p 80:80 --env DB_URL=${DB_URL} ${IMG}
 
 run_dev:  ## Run image in dev mode
+	@echo 'DB to connect to: ' ${DB_URL}
 	docker run --rm  -d --name ${CONTAINER} -p 80:80 \
 				--mount type=bind,source=${PWD}/app,target=/app \
 				--mount type=bind,source=${PWD}/tests,target=/tests \
-				--env DB_URL=${DB_URL_DEV} \
+				--env DB_URL=${DB_URL} \
 				${IMG} uvicorn main:app --host 0.0.0.0 --port 80 --reload
 
 stop:  ## Stop container
