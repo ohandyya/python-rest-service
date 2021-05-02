@@ -16,5 +16,5 @@ class ActivityProbability(Base):
     __tablename__ = "activity_probability"
 
     id = Column("id", type_=Integer, primary_key=True, index=True)
-    gender = Column("gender", type_=String, unique=True)
-    probability = Column("probability", type_=String)
+    gender = Column("gender", type_=String(8), unique=True)
+    probability = Column("probability", type_=String(16384))

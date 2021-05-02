@@ -2,7 +2,7 @@
 import logging
 import json
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from database import models
 
@@ -122,6 +122,21 @@ def compute_activity_probability(
     return prob
 
 
+def round_probs(prob_dict: Dict[str, float], ndigits=3) -> Dict[str, float]:
+    """Round prob_dict to ndigits
+
+    Args:
+        prob_dict (Dict[str, float]): [description]
+
+    Returns:
+        Dict[str, float]: [description]
+    """
+    return {
+        key: round(val, ndigits=ndigits)
+        for key, val in prob_dict.items()
+    }
+
+
 def update_activity_probability(db: Session):
     # Delete all current records
     db.query(models.ActivityProbability).delete()
@@ -139,7 +154,7 @@ def update_activity_probability(db: Session):
         try:
             db_record = models.ActivityProbability(
                 gender=gender,
-                probability=json.dumps(gender_probs)
+                probability=json.dumps(round_probs(gender_probs))
             )
             db.add(db_record)
             db.commit()
