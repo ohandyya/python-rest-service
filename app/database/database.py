@@ -151,13 +151,15 @@ def update_activity_probability(db: Session):
 
     # Update table
     for gender, gender_probs in activity_probability.items():
-        try:
-            db_record = models.ActivityProbability(
-                gender=gender,
-                probability=json.dumps(round_probs(gender_probs))
-            )
-            db.add(db_record)
-            db.commit()
-            db.refresh(db_record)
-        except Exception as e:
-            logger.error(f"Update db failed. Error: {e}")
+        for name, probability in gender_probs.items():
+            try:
+                db_record = models.ActivityProbability(
+                    gender=gender,
+                    name=name,
+                    probability=probability,
+                )
+                db.add(db_record)
+                db.commit()
+                db.refresh(db_record)
+            except Exception as e:
+                logger.error(f"Update db failed. Error: {e}")

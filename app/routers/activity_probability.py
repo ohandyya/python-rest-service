@@ -45,7 +45,13 @@ async def get_activity_probability(
         return
 
     # Convert raw_res to ActivityProbability
-    res = {}
+    res = {
+        "male": {},
+        "female": {},
+    }
     for row in raw_res:
-        res[row.gender] = json.loads(row.probability)
+        if row.gender in res:
+            res[row.gender].update(
+                {row.name: row.probability}
+            )
     return res

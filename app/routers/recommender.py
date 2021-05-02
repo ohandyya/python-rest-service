@@ -35,11 +35,10 @@ def _recommend_activity(db: Session, gender: str) -> Optional[str]:
 
     # Get all activities for gender
     prob = {}
-    for gender_prob in all_activities:
-        if gender_prob.gender == gender:
+    for row in all_activities:
+        if row.gender == gender:
             # find it
-            prob = json.loads(gender_prob.probability)
-            break
+            prob[row.name] = row.probability
 
     if not prob:
         logger.info(f"Cannot find {gender} from DB")
