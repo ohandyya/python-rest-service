@@ -53,6 +53,14 @@ jobs:
           docker tag $IMG:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      # Force service redeployment
+      - name: Redeploy ECS service
+        env:
+          cluster: pyrest-cluster
+          service: pyrest-service-v3-1
+          aws-region: us-east-1
+        run: aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment --region ${aws-region}
+
       # Lotoupt ECR
       - name: Log out of Amazon ECR
         if: always()
