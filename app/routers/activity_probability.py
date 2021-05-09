@@ -1,5 +1,4 @@
 from typing import Dict
-import json
 
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel, Field

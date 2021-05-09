@@ -42,6 +42,44 @@
         make stop
         ```
 
+## Cost Estimation
+
+- Total monthly cost: $40.25
+
+- RDS
+
+  - Monthly cost: 14.71 USD
+
+  - Details
+
+    - Instance type: db.t2.micro
+
+    - Storage amount: 20 GB
+
+    - Single AZ
+
+    - On Demand
+
+- ECS Service (Fargate)
+  
+  - Monthly cost: 8.88 USD
+
+  - Details
+
+    - Number of task: 1
+
+    - 0.25 vCPU + 0.5 GB
+
+- Application Load Balancer (ALB)
+
+  - Monthly cost: 16.66 USD
+
+  - Details
+
+    - Number of ALB: 1
+
+    - Fixed hourly charge per ALB: $0.0225 per hour
+
 ## Useful Resrouces
 
 - [FastAPI](https://fastapi.tiangolo.com/)

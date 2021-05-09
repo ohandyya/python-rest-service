@@ -42,3 +42,10 @@ test:  ## Run test
 
 get_api_doc:  ## Get openapi.json (assume service is already running locally)
 	curl http://localhost/openapi.json | jq . > ${OPENAPI_JSON}
+
+
+upload_ecr:  ## Upload image to ECR (assume image has been built)
+	aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 381982364978.dkr.ecr.us-east-1.amazonaws.com
+	docker tag ${IMG}:latest 381982364978.dkr.ecr.us-east-1.amazonaws.com/pyrest:latest
+	docker push 381982364978.dkr.ecr.us-east-1.amazonaws.com/pyrest:latest
+	docker logout 381982364978.dkr.ecr.us-east-1.amazonaws.com
