@@ -44,14 +44,29 @@ jobs:
 
       # Push to ECR
       - name: Tag, and push image to Amazon ECR
+        id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: pyrest
-          IMAGE_TAG: latest
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
           IMG: pyrest
         run: |
           docker tag $IMG:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition pyrest_activity_recommender \
+          --query taskDefinition > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: pyrest
+          image: ${{ steps.build-image.outputs.image }}
 
       # Force service redeployment
       - name: Redeploy ECS service
