@@ -56,10 +56,13 @@ jobs:
       # Force service redeployment
       - name: Redeploy ECS service
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           cluster: pyrest-cluster
           service: pyrest-service-v3-1
           aws-region: us-east-1
-        run: aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment --region ${aws-region}
+        run: |
+          aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment --region ${aws-region}
 
       # Lotoupt ECR
       - name: Log out of Amazon ECR
