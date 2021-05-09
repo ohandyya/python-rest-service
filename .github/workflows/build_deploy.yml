@@ -50,7 +50,7 @@ jobs:
           IMAGE_TAG: latest
           IMG: pyrest
         run: |
-          docker tag $IMG:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $IMG:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       # Lotoupt ECR
