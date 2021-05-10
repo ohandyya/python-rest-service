@@ -17,6 +17,14 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    env:
+      AWS_REGION: us-east-1
+      BUILD_IMG: pyrest
+      ECS_TASK_NAME: pyrest_activity_recommender
+      ECS_CONTAINER_NAME: pyrest
+      ECS_SERVICE: pyrest-service-v3-1
+      ECS_CLUSTER: pyrest-cluster
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -35,7 +43,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
       # Login to ECR
       - name: Log in to Amazon ECR
@@ -49,15 +57,14 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
-          IMG: pyrest
         run: |
-          docker tag $IMG:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag $BUILD_IMG:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition pyrest_activity_recommender \
+          aws ecs describe-task-definition --task-definition $ECS_TASK_NAME \
           --query taskDefinition > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
@@ -65,21 +72,19 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: pyrest
+          container-name: ${{ env.ECS_CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
-      # Force service redeployment
-      - name: Redeploy ECS service
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          cluster: pyrest-cluster
-          service: pyrest-service-v3-1
-          aws-region: us-east-1
-        run: |
-          aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment --region ${aws-region}
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+          force-new-deployment: true
 
-      # Lotoupt ECR
+          # Lotoupt ECR
       - name: Log out of Amazon ECR
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
